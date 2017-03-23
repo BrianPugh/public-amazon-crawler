@@ -1,7 +1,12 @@
 from HTMLParser import HTMLParser
+import numpy as np
+import pdb
+
+##############################################################
+# Functions to extract useful information from BeautifulSoup #
+##############################################################
 
 htmlparser = HTMLParser()
-
 
 def get_title(item):
     title = item.find("h2", "s-access-title")
@@ -20,10 +25,28 @@ def get_url(item):
 
 
 def get_price(item):
+    # conventional check
     price = item.find("span", "s-price")
     if price:
         return price.text
-    return None
+
+    # Multi-option check
+    price = item.find("span","a-color-base").text
+    try:
+        #remove $ signs
+        price = price.replace('$','')
+        #break up into low and high price strings
+        prices = price.split('-')
+        try:
+            prices = [int(x)/100.00 for x in prices]
+        except:
+            prices = [float(x) for x in prices]
+        #return average
+        return str(np.mean(prices))
+    except:
+        pass
+
+    return '<missing price>'
 
 
 def get_primary_img(item):
@@ -40,3 +63,4 @@ def get_primary_img(item):
         return "/".join(p1[:-1]) + "/" + base + "." + ext
 
     return None
+

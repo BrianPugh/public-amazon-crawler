@@ -1,10 +1,13 @@
 import psycopg2
-
 import settings
+import pdb
 
-conn = psycopg2.connect(database=settings.database, host=settings.host, user=settings.user)
+# connect to Postgres Database
+conn = psycopg2.connect(dbname=settings.database,
+        host=settings.host,
+        user=settings.user,
+        password=settings.password)
 cur = conn.cursor()
-
 
 class ProductRecord(object):
     """docstring for ProductRecord"""
